@@ -6,6 +6,8 @@ import router from './router'
 import 'lib-flexible/flexible'
 import 'normalize.css/normalize.css'
 
+import '@/common/stylus/index.styl'
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

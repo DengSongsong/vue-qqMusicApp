@@ -31,29 +31,34 @@ export default {
     padding .48rem .346667rem .4rem .346667rem 
     flex-direction row
     justify-content space-between
-    font-size $font-size-medium-x
+    font-size 19px
     font-weight 400
     .tab-left
       .icon
         color #fff
-        font-weight 800
+        // font-size 24px
     .tab-center
       display flex
       margin 0 1.786667rem /* 134/75 */
       .center-item
         display inline-block
-        height .533333rem /* 40/75 */
-        line-height .533333rem /* 40/75 */
         flex 1
         margin-right  .64rem /* 48/75 */
         text-align center
         &:last-child
           margin-right 0
         .tab-link
+          height .533333rem /* 40/75 */
+          line-height .533333rem /* 40/75 */
           text-overflow: ellipsis
           white-space: nowrap
           color #EBF7FE
+          vertical-align bottom
         &.router-link-active
           .tab-link
             color #fff
+    .tab-right
+      .icon
+        color #fff
+        // font-size 24px
 </style>

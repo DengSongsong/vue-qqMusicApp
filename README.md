@@ -19,3 +19,11 @@ npm run build --report
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+##20180304
+## tab组件
+
+##20180305
+## search-box组件 && slider组件
+1. jsonp 跨域问题 
+2. promise

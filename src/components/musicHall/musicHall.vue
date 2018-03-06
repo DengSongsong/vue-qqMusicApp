@@ -2,7 +2,7 @@
   <div class="musicHall">
     <div class="musicHall-content">
       <div>
-        <div class="slider-wrapper">
+        <div v-if="musicHall.length" class="slider-wrapper">
           <slider>
             <div v-for="item in musicHall" :key="item.index">
               <a :href="item.linkUrl">
@@ -30,7 +30,7 @@ export default {
     this._getMusicHall()
   },
   methods: {
-    // 获取轮播图数据
+    // 获取轮播图数据 异步
     _getMusicHall() {
       getMusicHall().then(res => {
         if(res.code === ERR_OK) {

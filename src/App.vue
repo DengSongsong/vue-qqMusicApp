@@ -2,7 +2,9 @@
   <div id="app">
     <tab></tab>
     <search-box></search-box>
-    <router-view/>
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
   </div>
 </template>
 

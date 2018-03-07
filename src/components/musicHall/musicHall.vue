@@ -2,6 +2,7 @@
   <div class="musicHall">
     <div class="musicHall-content">
       <div>
+        <!-- 轮播图 -->
         <div v-if="musicHall.length" class="slider-wrapper">
           <slider>
             <div v-for="item in musicHall" :key="item.index">
@@ -11,6 +12,10 @@
             </div>
           </slider>
         </div>
+        <!-- 导航列表 -->
+        <div class="radio-list">
+          <radio-list></radio-list>
+        </div>
     </div>
     </div>
   </div>
@@ -19,6 +24,7 @@
 import Slider from '@/base/slider/slider'
 import { getMusicHall } from '@/api/musicHall'
 import { ERR_OK } from '@/api/config'
+import RadioList from '@/components/radio-list/radio-list'
 export default {
   data() {
     return {
@@ -42,7 +48,8 @@ export default {
     }
   },
   components: {
-    Slider
+    Slider,
+    RadioList
   }
 }
 </script>
@@ -58,4 +65,9 @@ export default {
       .slider-wrapper
         width 100%
         overflow hidden
+      .radio-list
+        position fixed
+        z-index 1
+        margin-top -.066667rem /* 5/75 */
+        margin-left .106667rem /* 8/75 */
 </style>

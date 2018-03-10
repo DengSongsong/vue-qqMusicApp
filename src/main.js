@@ -3,10 +3,15 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import VueLazyload from 'vue-lazyload'
 import 'lib-flexible/flexible'
 import 'normalize.css/normalize.css'
 
 import '@/common/stylus/index.styl'
+
+Vue.use(VueLazyload, {
+  loading: require('../src/common/image/default_pic.jpg')
+})
 
 Vue.config.productionTip = false
 

@@ -1,13 +1,13 @@
 <template>
   <div class="musicHall">
-    <div class="musicHall-content">
+    <scroll class="musicHall-content" ref="scroll">
       <div>
         <!-- 轮播图 -->
-        <div v-if="carouselPic.length" class="slider-wrapper">
+        <div v-if="carouselPic.length" class="slider-wrapper" :data="songList">
           <slider>
             <div v-for="item in carouselPic" :key="item.index">
               <a :href="item.linkUrl">
-                <img :src="item.picUrl" alt="" class="needsclick">
+                <img @load="loadImage" :src="item.picUrl" alt="" class="needsclick">
               </a>
             </div>
           </slider>
@@ -18,7 +18,7 @@
         </div>
         <div class="newRecommend-wrapper">
           <div class="personality-radio">
-            <img :src="radioList.picUrl" alt="">
+            <img v-lazy="radioList.picUrl" alt="">
             <span class="icon iconfont icon-bofang"></span>
             <span class="radio-mame">个性电台</span>
           </div>
@@ -35,11 +35,32 @@
             </div>
           </div>
         </div>
-        <div class="recommend-list">
-          <h1 class="list-titel">为你推荐歌单</h1>
+        <div class="recommend-list-wrapper">
+          <div class="list-title">
+            <p class="title-name">为你推荐歌单</p>
+            <span class="icon iconfont icon-bofang"></span>
+          </div>
+          <ul>
+            <li v-for="item in songList" :key="item.index" class="item">
+              <div class="list-media">
+                <img v-lazy="item.picUrl" alt="">
+                <span class="listen-count">
+                  <i class="icon iconfont icon-diantai"></i>
+                  {{item.accessnum}}
+                </span>
+                <span class="icon iconfont icon-bofang1"></span>
+              </div>
+              <div class="list-info">
+                <p>{{item.songListDesc}}</p>
+              </div>
+            </li>
+          </ul>
         </div>
-    </div>
-    </div>
+      </div>
+      <div class="loading-wrapper" v-show="!carouselPic.length || !songList.length">
+        <loading></loading>
+      </div>
+    </scroll>
   </div>
 </template>
 <script>
@@ -47,6 +68,8 @@ import Slider from '@/base/slider/slider'
 import { getMusicHall } from '@/api/musicHall'
 import { ERR_OK } from '@/api/config'
 import RadioList from '@/components/radio-list/radio-list'
+import Scroll from '@/base/scroll/scroll'
+import Loading from '@/base/loading/loading'
 export default {
   data() {
     return {
@@ -96,11 +119,20 @@ export default {
           console.log(this.songList);
         }
       })
+    },
+    // 重新计算better-scroll
+    loadImage() {
+      if (!this.checkloaded) {
+        this.checkloaded = true;
+        this.$refs.scroll.refresh()
+      }
     }
   },
   components: {
     Slider,
     RadioList,
+    Scroll,
+    Loading
   }
 }
 </script>
@@ -134,7 +166,6 @@ export default {
           flex 0 0 3.36rem /* 252/75 */
           margin-right .346667rem /* 26/75 */
           font-size 0
-          // text-align center
           img
             width 100%
             display inline-block
@@ -159,7 +190,6 @@ export default {
             box-sizing border-box
             height 1.6rem /* 120/75 */
             padding .373333rem 0 .373333rem .373333rem
-            // padding-right .213333rem /* 16/75 */
             background #334753
             .recommend-title 
               font-size $font-size-medium-x
@@ -173,5 +203,59 @@ export default {
               height 100%
               right 0
               top 0
+      .recommend-list-wrapper
+        width 100%
+        padding-top .826667rem /* 62/75 */
+        .list-title
+          width 100%
+          position relative
+          text-align center
+          margin-bottom .48rem /* 36/75 */
+          .title-name
+            display inline-block
+            margin 0
+            font-size $font-size-large
+            letter-spacing 4px
+          .icon
+            position absolute
+            right .4rem /* 30/75 */
+        ul
+          margin 0
+          padding 0
+          display flex
+          flex-wrap: wrap
+          justify-content space-between
+          li
+            flex-basis 33%
+            .list-media
+              width 100%
+              position relative
+              img
+                display block
+                max-width 100%
+                height auto
+              .listen-count
+                position absolute
+                margin-top -.533333rem /* 40/75 */
+                margin-left .186667rem /* 14/75 */
+              .icon-bofang1
+                position absolute
+                right .266667rem /* 20/75 */
+                width .32rem /* 24/75 */
+                height .32rem /* 24/75 */
+                margin-top -.533333rem /* 40/75 */
+            .list-info
+              padding .24rem .213333rem .48rem .133333rem
+              p
+                margin 0
+                color $color-text-d
+                font-size $font-size-small
+                line-height .533333rem /* 40/75 */ 
+      .loading-container
+        position: absolute
+        width: 100%
+        top: 50%
+        transform: translateY(-50%)
+
         
 </style>

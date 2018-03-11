@@ -7,7 +7,7 @@
           <slider>
             <div v-for="item in carouselPic" :key="item.index">
               <a :href="item.linkUrl">
-                <img @load="loadImage" :src="item.picUrl" alt="" class="needsclick">
+                <img @load="loadImage" :src="item.picUrl" alt="">
               </a>
             </div>
           </slider>
@@ -61,6 +61,7 @@
         <loading></loading>
       </div>
     </scroll>
+    <!-- <router-view></router-view> -->
   </div>
 </template>
 <script>

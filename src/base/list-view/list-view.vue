@@ -1,5 +1,5 @@
 <template>
-  <scroll class="list-view" :data="data">
+  <scroll class="list-view" :data="data" @scroll="scroll" :listenScroll="listenScroll" :probeType="probeType" ref="listview">
     <div>
       <div class="singer-sort">
         <ul class="sort-list">
@@ -33,7 +33,7 @@
     </div>
     <div class="list-shortcut" @touchstart.stop.prevent="onShortcutTouchStart" @touchmove.stop.prevent="onShortcutTouchMove" @touchend.stop>
       <ul>
-        <li v-for="(item, index) in shortcutList" :key="index" class="item" :data-index="index">
+        <li v-for="(item, index) in shortcutList" :key="index" class="item" :class="{'current':currentIndex===index}" :data-index="index">
           {{item}}
         </li>
       </ul>
@@ -43,6 +43,9 @@
 <script>
 import BScroll from 'better-scroll'
 import Scroll from '@/base/scroll/scroll'
+import { getData } from '@/common/js/dom'
+// 每个字母高度
+const ANCHOR_HEIGHT = 18
 export default {
   props: {
     data: {
@@ -60,7 +63,10 @@ export default {
       ],
       musicSorts: [
         '全部','流行','嘻哈','摇滚','电子','民谣','R&B','民歌','轻音乐','爵士','古典','乡村','蓝调'
-      ]
+      ],
+      scrollY: -1,
+      currentIndex: 0,
+      diff: -1
     }
   },
   computed: {
@@ -68,12 +74,40 @@ export default {
       return this.data.map(item => {
         return item.title.substr(0, 1)
       })
-    }
+    },
+    // currentIndex() {
+    //   for (let i = 0; i < this.listHeight.length; i++) {
+    //     // 单个字母块的上限
+    //       const height1 = listHeight[i]
+    //       // 单个字母块的下限
+    //       const height2 = listHeight[i + 1]
+    //       // 
+    //       if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+    //         console.log(i)
+    //         return i
+    //       }
+    //       return 0
+    //   }
+    //   console.log(11)
+    // }
   },
   mounted() {
     this.$nextTick(() => {
+      // console.log(this)
       this._initSorts()
+      // this._calculateHeight() 
     })
+  },
+  created() {
+    // 数据函数之间共享，数据不定义在data()中，在data中数据会被监听值得变化，用于数据绑定
+    // 而在create()中，不需要监听数据值的变化
+    this.touch = {}
+    // 监听滚动时的位置
+    this.listenScroll = true
+    // 滑动的过程中，而且在 momentum 滚动动画运行过程中实时派发 scroll 事件
+    this.probeType = 3
+    // 字母块的高度
+    this.listHeight = []
   },
   methods: {
     _initSorts() {
@@ -104,10 +138,88 @@ export default {
       }
     },
     onShortcutTouchStart(e) {
-      console.log(e)
+      // console.log(e)
+      // console.log(e.target.dataset.index)
+      
+      // 点击时当前字母的索引
+      let anchorIndex = getData(e.target, 'index')
+      // console.log(anchorIndex)
+
+      // 手指第一次点触时手指位置的相关信息
+      let firstTouch = e.touches[0]
+      // console.log(firstTouch)
+      
+      // 手指y方向的位置值
+      this.touch.y1 = firstTouch.pageY
+      this.touch.anchorIndex = anchorIndex
+      // 点击字母跳到指定区域
+      this._scrollTo(anchorIndex)
     },
     onShortcutTouchMove(e) {
-      console.log(e)
+      // console.log(e)
+      // 获取手指移动时的位置
+      let firstTouch = e.touches[0]
+      this.touch.y2 = firstTouch.pageY
+      // this.touch.y2 - this.touch.y1 为第一次点击某个字母后再滑动到某个字母之间y方向之间的差值
+      // ANCHOR_HEIGHT 为一个字母的高度
+      // delta为滑动后滑动字母的个数
+      let delta = (this.touch.y2 - this.touch.y1) / ANCHOR_HEIGHT | 0
+      // 滑动到“最后”一个字母时的索引
+      let anchorIndex = parseInt(this.touch.anchorIndex) + delta
+      // 滑到指定的歌手列表区域
+      this._scrollTo(anchorIndex)
+
+    },
+    // 监听滚动时y方向位置
+    scroll(pos) {
+      this.scrollY = pos.y
+      // console.log(this.scrollY)
+    },
+    _scrollTo(index) {
+      // this.scrollY = -this.listHeight[index]
+      // 滑到指定的歌手列表区域
+      this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
+    },
+    // 计算每个字母块的高度
+    _calculateHeight() {
+      this.listHeight = []
+      const sort = this.$refs.sortList
+      // console.log(sort.clientHeight)
+      const list = this.$refs.listGroup
+      let height = sort.clientHeight * 3
+      this.listHeight.push(height)
+      for (let i = 0; i < list.length; i++) {
+        let item = list[i]
+        height += item.clientHeight
+        this.listHeight.push(height)
+      }
+      console.log(this.listHeight)
+    },
+    watch: {
+      data() {
+        setTimeout(() => {
+          this._calculateHeight()
+        }, 20)
+      },
+      scrollY(newY) {
+        console.log(newY);
+        console.log(this.scrollY)
+        const listHeight = this.listHeight
+        for (let i = 0; i < listHeight.length - 1; i++) {
+          // 单个字母块的上限
+          const height1 = listHeight[i]
+          // 单个字母块的下限
+          const height2 = listHeight[i + 1]
+          // 
+          if (!height2 || (-newY >= height1 && -newY < height2)) {
+            this.currentIndex = i
+            console.log(this.currentIndex)
+            return 
+          }
+          this.currentIndex = 0
+         
+        }
+      }
     }
   },
   components: {

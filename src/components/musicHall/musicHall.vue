@@ -117,7 +117,7 @@ export default {
         if(res.code === ERR_OK) {
           // console.log(res)
           this.songList = res.data.songList
-          console.log(this.songList);
+          // console.log(this.songList);
         }
       })
     },

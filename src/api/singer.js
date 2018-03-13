@@ -16,3 +16,49 @@ export function getSingerList() {
   })
   return jsonp(url, data, options)
 }
+export function getSingerDetail_songs(singerId) {
+  const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_track_cp.fcg'
+  const data = Object.assign({}, commonParams, {
+    g_tk: 591145959,
+    hostUin: 0,
+    platform: 'yqq',
+    needNewCode: 0,
+    singermid: singerId,
+    order: 'listen',
+    begin: 0,
+    num: 100,
+    songstatus: 1
+  })
+  return jsonp(url, data, options)
+}
+export function getSingerDetail_albums(singerId) {
+  const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_album.fcg'
+  const data = Object.assign({}, commonParams, {
+    g_tk: 591145959,
+    hostUin: 0,
+    platform: 'yqq',
+    needNewCode: 0,
+    singermid: singerId,
+    order: 'time',
+    begin: 0,
+    num: 30,
+    exstatus: 1
+  })
+  return jsonp(url, data, options)
+}
+
+export function getSingerDetail_MV(singerId) {
+  const url = 'https://c.y.qq.com/v8/fcg-bin/fcg_v8_singer_album.fcg'
+  const data = Object.assign({}, commonParams, {
+    g_tk: 591145959,
+    hostUin: 0,
+    platform: 'yqq',
+    needNewCode: 0,
+    singermid: singerId,
+    order: 'listen',
+    begin: 0,
+    num: 100,
+    songstatus: 1
+  })
+  return jsonp(url, data, options)
+}

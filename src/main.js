@@ -4,6 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueLazyload from 'vue-lazyload'
+import store from './store'
 import 'lib-flexible/flexible'
 import 'normalize.css/normalize.css'
 
@@ -19,6 +20,7 @@ Vue.config.productionTip = false
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

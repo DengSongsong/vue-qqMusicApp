@@ -20,7 +20,7 @@
         <li v-for="group in data" :key="group.index" class="list-group" ref="listGroup">
           <h2 class="list-group-title">{{group.title}}</h2>
           <ul>
-            <li v-for="item in group.items" :key="item.index" class="list-group-item">
+            <li @click="selectItem(item)" v-for="item in group.items" :key="item.index" class="list-group-item">
               <img v-lazy="item.avatar" alt="" class="avatar">
               <div class="content">
                 <span class="name">{{item.name}}</span>
@@ -110,6 +110,9 @@ export default {
     this.listHeight = []
   },
   methods: {
+    selectItem(item) {
+      this.$emit('select', item)
+    },
     _initSorts() {
       if(this.musicSorts) {
         let padding = 13

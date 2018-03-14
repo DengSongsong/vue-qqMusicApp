@@ -5,17 +5,20 @@
     <keep-alive>
       <router-view/>
     </keep-alive>
+    <player></player>
   </div>
 </template>
 
 <script>
 import Tab from '@/components/tab/tab'
 import SearchBox from '@/components/search-box/search-box'
+import Player from '@/components/player/player'
 export default {
   name: 'App',
   components: {
     Tab,
-    SearchBox
+    SearchBox,
+    Player
   }
 }
 </script>

@@ -1,1 +1,7 @@
 export const SET_SINGER = 'SET_SINGER'
+export const SET_PLSYING_STATE = 'SET_PLSYING_STATE'
+export const SET_FULL_SCREEN = 'SET_FULL_SCREEN'
+export const SET_PLAY_lIST = 'SET_PLAY_lIST'
+export const SET_SEQUENCE_LIST = 'SET_SEQUENCE_LIST'
+export const SET_PLAY_MODE = 'SET_PLAY_MODE'
+export const SET_CURRENT_INDEX = 'SET_CURRENT_INDEX'

@@ -42,7 +42,7 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{formatTime(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <progress-bar></progress-bar>
+              <progress-bar :timePercent="timePercent"></progress-bar>
             </div>
             <span class="time time-r">{{formatTime(currentSong.duration)}}</span>
           </div>
@@ -136,6 +136,14 @@ export default {
     // 图片旋转
     cdRotate() {
       return this.playing ? 'play' : 'pause'
+    },
+    // 歌曲播放时间比例
+    timePercent() {
+      return this.currentTime / this.currentSong.duration
+    },
+    onProgressBarChange(percent) {
+      // const currentTime = this.currentSong.duration * percent
+      // this.currentTime = currentTime
     }
   },
   watch: {
@@ -146,7 +154,7 @@ export default {
     },
     // 监听播放状态
     playing(newPlaying) {
-      console.log(newPlaying)
+      // console.log(newPlaying)
       const audio = this.$refs.audio
       this.$nextTick(() => {
         newPlaying ? audio.play() : audio.pause()
@@ -232,6 +240,9 @@ export default {
       setPlayingState: 'SET_PLSYING_STATE',
       setCurrentIndex: 'SET_CURRENT_INDEX'
     })
+  },
+  components: {
+    ProgressBar
   }
 }
 </script>
@@ -382,8 +393,8 @@ export default {
               text-align: left
             &.time-r
               text-align: right
-            .progress-bar-wrapper
-              flex: 1
+          .progress-bar-wrapper
+            flex: 1
         .operators
           display flex
           align-items center 

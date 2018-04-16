@@ -1,5 +1,12 @@
 import originJsonp from 'jsonp'
 
+/**
+ * @method jsonp 使用promise对原始jsonp封装
+ * @param {String} url 数据路径
+ * @param {String} data 数据参数
+ * @param {Object} option 
+ * @returns {Object} 
+ */
 export default function jsonp(url, data, option) {
   url += (url.indexOf('?') < 0 ? '?' : '&') + param(data)
   return new Promise((resolve, reject) => {
@@ -13,7 +20,11 @@ export default function jsonp(url, data, option) {
   })
 }
 
-// 参数拼接
+/**
+ * @method param url参数拼接
+ * @param {Object} data url参数
+ * @returns {String}
+ */
 export function param(data) {
   let url = ''
   for(let k in data) {

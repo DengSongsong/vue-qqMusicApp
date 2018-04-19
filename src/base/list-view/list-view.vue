@@ -74,22 +74,7 @@ export default {
       return this.data.map(item => {
         return item.title.substr(0, 1)
       })
-    },
-    // currentIndex() {
-    //   for (let i = 0; i < this.listHeight.length; i++) {
-    //     // 单个字母块的上限
-    //       const height1 = listHeight[i]
-    //       // 单个字母块的下限
-    //       const height2 = listHeight[i + 1]
-    //       // 
-    //       if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
-    //         console.log(i)
-    //         return i
-    //       }
-    //       return 0
-    //   }
-    //   console.log(11)
-    // }
+    }
   },
   mounted() {
     this.$nextTick(() => {
@@ -155,6 +140,7 @@ export default {
       // 手指y方向的位置值
       this.touch.y1 = firstTouch.pageY
       this.touch.anchorIndex = anchorIndex
+      // console.log(this.touch)
       // 点击字母跳到指定区域
       this._scrollTo(anchorIndex)
     },
@@ -179,15 +165,24 @@ export default {
       // console.log(this.scrollY)
     },
     _scrollTo(index) {
-      // this.scrollY = -this.listHeight[index]
+      // console.log(index)
+      if (!index && index !== 0) {
+        return
+      }
+      if (index < 0) {
+        index = 0
+      } else if (index > this.listHeight.length - 2) {
+        index = this.listHeight.length - 2
+      }
+      this.scrollY = -this.listHeight[index]
       // 滑到指定的歌手列表区域
       this.$refs.listview.scrollToElement(this.$refs.listGroup[index], 0)
     },
     // 计算每个字母块的高度
     _calculateHeight() {
       this.listHeight = []
-      const sort = this.$refs.sortList
-      // console.log(sort.clientHeight)
+      const sort = this.$refs.singerSort
+      // console.log(sort.clientHeight)  //38
       const list = this.$refs.listGroup
       let height = sort.clientHeight * 3
       this.listHeight.push(height)
@@ -196,32 +191,31 @@ export default {
         height += item.clientHeight
         this.listHeight.push(height)
       }
-      console.log(this.listHeight)
+      // console.log(this.listHeight)
+    }
+  },
+  watch: {
+    data() {
+      setTimeout(() => {
+        this._calculateHeight()
+      }, 20)
     },
-    watch: {
-      data() {
-        setTimeout(() => {
-          this._calculateHeight()
-        }, 20)
-      },
-      scrollY(newY) {
-        console.log(newY);
-        console.log(this.scrollY)
-        const listHeight = this.listHeight
-        for (let i = 0; i < listHeight.length - 1; i++) {
-          // 单个字母块的上限
-          const height1 = listHeight[i]
-          // 单个字母块的下限
-          const height2 = listHeight[i + 1]
-          // 
-          if (!height2 || (-newY >= height1 && -newY < height2)) {
-            this.currentIndex = i
-            console.log(this.currentIndex)
-            return 
-          }
-          this.currentIndex = 0
-         
+    scrollY(newY) {
+      // console.log(newY);
+      // console.log(this.scrollY)
+      const listHeight = this.listHeight
+      for (let i = 0; i < listHeight.length - 1; i++) {
+        // 单个字母块的上限
+        const height1 = listHeight[i]
+        // 单个字母块的下限
+        const height2 = listHeight[i + 1]
+        // 
+        if (!height2 || (-newY >= height1 && -newY < height2)) {
+          this.currentIndex = i
+          // console.log(this.currentIndex)
+          return 
         }
+        this.currentIndex = 0  
       }
     }
   },

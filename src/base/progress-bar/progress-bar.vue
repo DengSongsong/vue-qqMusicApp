@@ -1,5 +1,5 @@
 <template>
-  <div class="progress-bar" ref="progressBar">
+  <div class="progress-bar" ref="progressBar" @click="progressClick">
     <div class="bar-inner">
       <div class="progress" ref="progress"></div>
       <div class="progress-btn-wrapper">
@@ -16,7 +16,7 @@ export default {
       default: 0
     }
   },
-  create() {
+  created() {
     //这个对象用于存储拖动进度条时的信息
     // this.touch = {}
   },
@@ -27,32 +27,42 @@ export default {
   },
   methods: {
     progressTouchStart(e) {
-      console.log(e)
+      // console.log(e)
+      // 初始化
       this.touch.isInited  = true
-      this.touch.startX = e.touchs[0].pageX
+      // 点击位置横向
+      this.touch.startX = e.touches[0].pageX
+      // 进度条已经滚动距离
       this.touch.left = this.$refs.progress.clientWidth
+      // console.log(this.touch)
     },
     progressTouchMove(e) {
+      // console.log(e)
       if (!this.touch.isInited ) {
         return
       }
-      const deltaX = e.touchs[0].pageX - this.touch.startX
+      // bar移动的偏移量
+      const deltaX = e.touches[0].pageX - this.touch.startX
       const offsetWidth = Math.min(this.$refs.progressBar.clientWidth - this.$refs.progressBtn.clientWidth, Math.max(0, this.touch.left + deltaX))
       this._offset(offsetWidth)
     },
     progressTouchEnd() {
       this.touch.isInited  = false
-      // this._triggerPercent()
+      this._triggerPercent()
     },
     _triggerPercent() {
       let btnWidth = this.$refs.progressBtn.clientWidth
       let barWidth = this.$refs.progressBar.clientWidth - btnWidth
       const percent = this.$refs.progress.clientWidth / barWidth
-      // this.$emit('percentChange', percent)
+      this.$emit('percentChange', percent)
     },
     _offset(offsetWidth) {
       this.$refs.progress.style.width = `${offsetWidth}px`
       this.$refs.progressBtn.style['transform'] = `translate3d(${offsetWidth}px, 0, 0)`
+    },
+    progressClick(e) {
+      this._offset(e.offsetX)
+      this._triggerPercent()
     } 
   },
   watch: {

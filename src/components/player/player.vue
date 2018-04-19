@@ -18,7 +18,7 @@
         <div class="middle">
           <div class="middle-l">
             <div class="cd-wrapper">
-              <div class="cd" >
+              <div class="cd">
                 <img :src="currentSong.image" alt="" :class="cdRotate" class="image">
               </div>
             </div>
@@ -42,7 +42,7 @@
           <div class="progress-wrapper">
             <span class="time time-l">{{formatTime(currentTime)}}</span>
             <div class="progress-bar-wrapper">
-              <progress-bar :timePercent="timePercent"></progress-bar>
+              <progress-bar :timePercent="timePercent" @percentChange="onProgressBarChange"></progress-bar>
             </div>
             <span class="time time-r">{{formatTime(currentSong.duration)}}</span>
           </div>
@@ -135,15 +135,11 @@ export default {
     },
     // 图片旋转
     cdRotate() {
-      return this.playing ? 'play' : 'pause'
+      return this.playing ? 'play' : 'play pause'
     },
     // 歌曲播放时间比例
     timePercent() {
       return this.currentTime / this.currentSong.duration
-    },
-    onProgressBarChange(percent) {
-      // const currentTime = this.currentSong.duration * percent
-      // this.currentTime = currentTime
     }
   },
   watch: {
@@ -216,8 +212,9 @@ export default {
       this.songReady = true
     },
     timeUpdate(e) {
-    //   console.log(e)
+      // console.log(e)
       this.currentTime = e.target.currentTime
+      // console.log(this.currentTime)
     },
     // 时间戳转换
     formatTime(interval) {
@@ -234,6 +231,13 @@ export default {
         len ++
       }
       return num
+    },
+    onProgressBarChange(percent) {
+      const currentTime = this.currentSong.duration * percent
+      this.$refs.audio.currentTime = currentTime
+      if (!this.playing) {
+        this.togglePlaying()
+      }
     },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
@@ -334,7 +338,7 @@ export default {
                 border 10px solid rgba(255, 255, 255, 0.1)
                 &.play
                   animation rotate 20s linear infinite 
-                &.puase
+                &.pause
                   animation-play-state paused
           .playing-lyric-wrapper
             width 80%

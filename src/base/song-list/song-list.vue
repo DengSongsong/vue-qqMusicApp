@@ -1,6 +1,6 @@
 <template>
   <div class="song-list">
-    <div class="play-wrapper">
+    <div class="play-wrapper"  @click="random">
       <i class="icon iconfont icon-bofang1"></i>
       <span class="play">全部播放</span>
     </div>
@@ -16,6 +16,7 @@
   </div>
 </template>
 <script>
+import { mapActions } from 'vuex'
 export default {
   props: {
     songs: {
@@ -29,12 +30,20 @@ export default {
     },
     selectItem(item, index) {
       this.$emit('select', item, index)
-    }
+    },
+    random() {
+      this.randomPlay({
+        list: this.songs
+      })
+    },
+    ...mapActions([
+      'randomPlay'
+    ])
   }
 }
 </script>
 <style lang="stylus">
-  @import "../../common/stylus/variable";
+  @import "../../common/stylus/variable"
   .song-list
     .play-wrapper
       display flex

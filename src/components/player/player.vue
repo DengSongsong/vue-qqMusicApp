@@ -47,8 +47,8 @@
             <span class="time time-r">{{formatTime(currentSong.duration)}}</span>
           </div>
           <div class="operators">
-            <div class="icon-mode icon-type">
-              <i class="icon iconfont icon-suijibofang01"></i>
+            <div class="icon-mode icon-type" @click="changeMode">
+              <i class="icon iconfont icon-suijibofang01" :class="iconMode"></i>
             </div>
             <div class="icon-pre icon-type">
               <i @click="prev" class="icon iconfont icon-shangyishou"></i>
@@ -90,27 +90,31 @@
           <p class="desc">{{currentSong.singer}}</p>
         </div>
         <div class="control">
-          <div>
+          <progress-circle :radius="radius" :timePercent="timePercent">
             <i @click.stop="togglePlaying" class="icon iconfont icon-mini" :class="miniIcon"></i>
-          </div>
+          </progress-circle>
         </div>
         <div class="control">
           <i class="icon iconfont icon-liebiao-copy"></i>
         </div>
       </div>
     </transition>
-    <audio :src="currentSong.url" ref="audio" @play="ready" @error="error" @timeupdate="timeUpdate"></audio>
+    <audio :src="currentSong.url" ref="audio" @play="ready" @error="error" @timeupdate="timeUpdate" @ended="end"></audio>
   </div>
 </template>
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import ProgressBar from '@/base/progress-bar/progress-bar'
+import ProgressCircle from '@/base/progress-circle/progress-circle'
+import { playMode } from '@/common/js/config'
+import { shuffle } from '@/common/js/utils'
 export default {
   data() {
     return {
       songReady: false,
     //   歌曲当前播放时间
-      currentTime: 0
+      currentTime: 0,
+      radius: 32
     }
   },
   computed: {
@@ -124,7 +128,10 @@ export default {
     //   当前歌曲播放状态
       'playing',
     //   当前歌曲索引
-      'currentIndex'
+      'currentIndex',
+      // 播放模式
+      'mode',
+      'sequenceList'
     ]),
     // 播放页面 播放按钮切换
     playIcon() {
@@ -140,10 +147,16 @@ export default {
     // 歌曲播放时间比例
     timePercent() {
       return this.currentTime / this.currentSong.duration
+    },
+    iconMode() {
+      return this.mode === playMode.sequence ? 'icon-xunhuanbofang' : this.mode === playMode.loop ? 'icon-danquxunhuan' : 'icon-suijibofang01'
     }
   },
   watch: {
-    currentSong() {
+    currentSong(newSong, oldSong) { //在currentSong变化时执行播放
+      if(!newSong.id || newSong.id === oldSong.id) {
+        return
+      }
       this.$nextTick(() => {
         this.$refs.audio.play()
       })
@@ -239,14 +252,52 @@ export default {
         this.togglePlaying()
       }
     },
+    // 点击按钮改变播放模式，提交mutations
+    changeMode() {
+      let nextMode = (this.mode + 1) % 3
+      this.setPlayMode(nextMode)
+      let list = []
+      if (this.mode === playMode.random) {// 随机播放打乱播放列表
+        list = shuffle(this.sequenceList)
+      } else { //顺序播放
+        list = this.sequenceList
+      }
+      // 改变歌曲顺序前先重设当前歌曲索引
+      this.stayCurrentIndex(list)
+      // 提交mutation改变歌曲顺序
+      this.setPlayList(list)
+    },
+    // 改变播放模式时当前播放歌曲索引发生变化，需要重设索引防止播放列表不可控制
+    stayCurrentIndex(list) {
+      // findIndex是es6的数组方法，返回数组中满足条件的第一个元素的索引
+      let stayIndex = list.findIndex(item => {
+        return item.id === this.currentSong.id
+      })
+      this.setCurrentIndex(stayIndex)
+
+    },
+    end() {
+      if (this.mode === playMode.loop) {
+        this.loop()
+      } else {
+        this.next()
+      }
+    },
+    loop() {
+      this.$refs.audio.currentTime = 0
+      this.$refs.audio.play()
+    },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
       setPlayingState: 'SET_PLSYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX'
+      setCurrentIndex: 'SET_CURRENT_INDEX',
+      setPlayMode: 'SET_PLAY_MODE',
+      setPlayList: 'SET_PLAY_lIST'
     })
   },
   components: {
-    ProgressBar
+    ProgressBar,
+    ProgressCircle
   }
 }
 </script>
@@ -490,6 +541,11 @@ export default {
         .icon-bofang1
           font-size: 26px
           color: $color-icon
+        .icon-mini
+          font-size 32px
+          position absolute
+          left 0
+          top 3px
   @keyframes rotate
     0%
       transform: rotate(0)

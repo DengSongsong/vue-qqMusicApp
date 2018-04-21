@@ -34,13 +34,14 @@ export default {
   methods: {
     _getDetail_songs() {
       if (!this.singer.id) {
-        this.$router('/singer')
+        this.$router.push('/singer')
         return
       }
       getSingerDetail_songs(this.singer.id).then(res => {
         if (res.code === ERR_OK) {
           // console.log(res)
           this.songs = this._normalizeSongs(res.data.list)
+          // console.log(res.data.list)
           // console.log(this.songs)
         }
       })
@@ -49,6 +50,7 @@ export default {
       let ret = []
       list.forEach(item => {
         let { musicData } = item
+        // console.log(musicData)
         if (musicData.songid && musicData.albumid) {
           ret.push(createSong(musicData))
         }
@@ -75,7 +77,7 @@ export default {
 }
 </script>
 <style lang="stylus">
-  .slide-enter-active, .slide-leave-acitve
+  .slide-enter-active, .slide-leave-active
     transition all 0.3s
   .slide-enter, .slide-leave-to
     transform translate3d(100%, 0, 0)

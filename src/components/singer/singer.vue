@@ -44,7 +44,7 @@ export default {
         }
       })
     },
-    // 规范歌手列表，按照a-z排列
+    // 规范歌手列表，两类数据：一是热门数据、二是按照a-z排列
     _normalizeSinger(list) {
       let map = {
         hot: { //热门歌手列表
@@ -55,7 +55,7 @@ export default {
       // 遍历所有歌手
       list.forEach((item, index) => {
         if (index < HOT_SINGER_LEN) {
-          // 热门歌手信息存入数组
+          // 热门歌手信息存入数组，10条
           map.hot.items.push(new Singer({
             name: item.Fsinger_name,
             id: item.Fsinger_mid
@@ -75,6 +75,7 @@ export default {
           id: item.Fsinger_mid
         }))
       })
+      // console.log(map);
       // return map
       // 按a-z排序
       let ret = []

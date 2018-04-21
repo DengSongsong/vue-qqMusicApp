@@ -18,13 +18,13 @@ export default {
   },
   created() {
     //这个对象用于存储拖动进度条时的信息
-    // this.touch = {}
+    this.touch = {}
   },
-  data() {
-    return {
-      touch: {}
-    }
-  },
+  // data() {
+  //   return {
+  //     touch: {}
+  //   }
+  // },
   methods: {
     progressTouchStart(e) {
       // console.log(e)
@@ -50,6 +50,7 @@ export default {
       this.touch.isInited  = false
       this._triggerPercent()
     },
+    // 计算移动btn后时间比
     _triggerPercent() {
       let btnWidth = this.$refs.progressBtn.clientWidth
       let barWidth = this.$refs.progressBar.clientWidth - btnWidth
@@ -61,7 +62,11 @@ export default {
       this.$refs.progressBtn.style['transform'] = `translate3d(${offsetWidth}px, 0, 0)`
     },
     progressClick(e) {
-      this._offset(e.offsetX)
+      const rect = this.$refs.progressBar.getBoundingClientRect()
+      const offsetWidth = e.pageX - rect.left
+      this._offset(offsetWidth)
+      // 这里当我们点击 progressBtn 的时候，e.offsetX 获取不对
+      // this._offset(e.offsetX)
       this._triggerPercent()
     } 
   },

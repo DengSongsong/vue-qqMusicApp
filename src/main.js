@@ -7,6 +7,7 @@ import VueLazyload from 'vue-lazyload'
 import store from './store'
 import 'lib-flexible/flexible'
 import 'normalize.css/normalize.css'
+import 'babel-polyfill'
 
 import '@/common/stylus/index.styl'
 

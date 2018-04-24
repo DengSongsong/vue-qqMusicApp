@@ -10,9 +10,14 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "axios": "^0.18.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-runtime": "^6.26.0",
     "better-scroll": "^1.8.4",
+    "js-base64": "^2.4.3",
     "jsonp": "^0.2.1",
     "lib-flexible": "^0.3.2",
+    "lyric-parser": "^1.0.1",
     "normalize.css": "^8.0.0",
     "vue": "^2.5.2",
     "vue-lazyload": "^1.2.2",

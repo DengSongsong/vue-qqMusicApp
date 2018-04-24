@@ -108,13 +108,15 @@ import ProgressBar from '@/base/progress-bar/progress-bar'
 import ProgressCircle from '@/base/progress-circle/progress-circle'
 import { playMode } from '@/common/js/config'
 import { shuffle } from '@/common/js/utils'
+import Lyric from 'lyric-parser'
 export default {
   data() {
     return {
       songReady: false,
     //   歌曲当前播放时间
       currentTime: 0,
-      radius: 32
+      radius: 32,
+      currentLyric: null
     }
   },
   computed: {
@@ -167,6 +169,7 @@ export default {
       const audio = this.$refs.audio
       this.$nextTick(() => {
         newPlaying ? audio.play() : audio.pause()
+        this._getLyric()
       })
     }
   },
@@ -286,6 +289,14 @@ export default {
     loop() {
       this.$refs.audio.currentTime = 0
       this.$refs.audio.play()
+    },
+    _getLyric() {
+      // this.currentSong.getLyric().then(lyric => {
+      //   this.currentLyric = new Lyric(lyric, this.lyricCallback)
+      //   console.log(this.currentLyric)
+      // })
+      this.currentSong.getLyric()
+      // console.log(this.currentSong)
     },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',

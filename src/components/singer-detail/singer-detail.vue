@@ -59,7 +59,7 @@ export default {
     },
     _getDetail_albums() {
       if (!this.singer.id) {
-        this.$router('/singer')
+        this.$router.push('/singer')
         return
       }
       getSingerDetail_albums(this.singer.id).then(res => {

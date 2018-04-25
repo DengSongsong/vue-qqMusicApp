@@ -109,6 +109,7 @@ import ProgressCircle from '@/base/progress-circle/progress-circle'
 import { playMode } from '@/common/js/config'
 import { shuffle } from '@/common/js/utils'
 import Lyric from 'lyric-parser'
+import getLyric from '@/api/song'
 export default {
   data() {
     return {
@@ -161,7 +162,11 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs.audio.play()
+        // console.log(getLyric())
       })
+      this.currentSong.getLyric()
+      console.log(this.currentSong)
+      console.log(this.currentSong.getLyric())
     },
     // 监听播放状态
     playing(newPlaying) {
@@ -169,7 +174,6 @@ export default {
       const audio = this.$refs.audio
       this.$nextTick(() => {
         newPlaying ? audio.play() : audio.pause()
-        this._getLyric()
       })
     }
   },
@@ -295,7 +299,7 @@ export default {
       //   this.currentLyric = new Lyric(lyric, this.lyricCallback)
       //   console.log(this.currentLyric)
       // })
-      this.currentSong.getLyric()
+      // this.currentSong.getLyric()
       // console.log(this.currentSong)
     },
     ...mapMutations({

@@ -1,22 +1,23 @@
 import { commonParams } from './config'
 import axios from 'axios'
 
+const debug = process.env.NODE_ENV !== 'production'
 export function getLyric(mid) {
-  const url = '/api/getLyric'
+  const url = debug ? '/api/lyric' : 'http://ustbhuangyi.com/music/api/lyric'
 
   const data = Object.assign({}, commonParams, {
     songmid: mid,
-    g_tk: 5381,
     platform: 'yqq',
-    loginUin: 0,
     hostUin: 0,
     needNewCode: 0,
+    categoryId: 10000000,
     pcachetime: +new Date(),
-    format: 'json'
+    formate: 'json'
   })
+
   return axios.get(url, {
     params: data
-  }).then(res => {
+  }).then((res) => {
     return Promise.resolve(res.data)
   })
 }

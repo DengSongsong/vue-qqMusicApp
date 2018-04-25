@@ -9,12 +9,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
-var express = require('express')
-var axios = require('axios')
-var app = express()
-var apiRoutes = express.Router()
-app.use('/api', apiRoutes)
-
+const axios = require('axios')
+const bodyParser = require('body-parser')
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
 
@@ -49,28 +45,29 @@ const devWebpackConfig = merge(baseWebpackConfig, {
       poll: config.dev.poll,
     },
     before(app) {
+      app.use(bodyParser.urlencoded({extended: true}))
+      const querystring = require('querystring')
       // 获取歌词
-      app.get('/api/getLyric', function(req, res) {
-        const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric.fcg'
+      app.get('/api/lyric', function(req, res) {
+        const url = 'https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg'
+        
         axios.get(url, {
           headers: {
-            headers: {
-              referer:'https://y.qq.com/',
-              host: 'c.y.qq.com'
-            },
-            params: req.query
-          }
-        }).then(response => {
-          var ret = response.data
+            referer: 'https://c.y.qq.com/',
+            host: 'c.y.qq.com'
+          },
+          params: req.query
+        }).then((response) => {
+          let ret = response.data
           if (typeof ret === 'string') {
-            var reg = /^\w+\(({[^()]+})\)$/
-            var matches = ret.match(reg)
+            const reg = /^\w+\(({.+})\)$/
+            const matches = ret.match(reg)
             if (matches) {
               ret = JSON.parse(matches[1])
             }
           }
           res.json(ret)
-        }).catch(e => {
+        }).catch((e) => {
           console.log(e)
         })
       })

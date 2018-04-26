@@ -1,5 +1,5 @@
 <template>
-  <div class="musicHall">
+  <div class="musicHall" ref="musicHall">
     <scroll class="musicHall-content" ref="scroll">
       <div>
         <!-- 轮播图 -->
@@ -71,7 +71,9 @@ import { ERR_OK } from '@/api/config'
 import RadioList from '@/components/radio-list/radio-list'
 import Scroll from '@/base/scroll/scroll'
 import Loading from '@/base/loading/loading'
+import { playlistMixin } from '@/common/js/mixin'
 export default {
+  mixins: [playlistMixin],
   data() {
     return {
       // 轮播图
@@ -91,6 +93,11 @@ export default {
     this._getRecommendSongList()
   },
   methods: {
+    handlePlaylist(playList) {
+      const bottom = playList.length > 0 ? '60px' : ''
+      this.$refs.musicHall.style.bottom = bottom
+      this.$refs.scroll.refresh()
+    },
     // 获取轮播图数据 异步
     _getCarouselPic() {
       getMusicHall().then(res => {

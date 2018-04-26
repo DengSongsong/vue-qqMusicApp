@@ -1,11 +1,11 @@
 <template>
-  <div class="singer">
+  <div class="singer" ref="singer">
     <div class="list-header">
       <span class="icon iconfont icon-fanhui"></span>
       <span class="list-title">歌手</span>
       <span class="icon iconfont icon-iconfontzhizuobiaozhun22"></span>
     </div>
-    <list-view :data="singers" @select="selectSinger"></list-view>
+    <list-view :data="singers" @select="selectSinger" ref="list"></list-view>
     <router-view></router-view>
   </div>
 </template>
@@ -15,9 +15,11 @@ import { getSingerList } from '@/api/singer'
 import { ERR_OK } from '@/api/config'
 import Singer from '@/common/js/singer'
 import {mapMutations} from 'vuex'
+import { playlistMixin } from '@/common/js/mixin'
 const HOT_NAME = '热门'
 const HOT_SINGER_LEN = 10
 export default {
+  mixins: [playlistMixin],
   data() {
     return {
       singers: []
@@ -27,6 +29,11 @@ export default {
     this._getSingerList()
   },
   methods: {
+    handlePlaylist(playlist) {
+        const bottom = playlist.length > 0 ? '60px' : ''
+        this.$refs.singer.style.bottom = bottom
+        this.$refs.list.refresh()
+    },
     // 歌手详情页跳转  子路由跳转
     selectSinger(singer) {
       // console.log(singer)

@@ -29,7 +29,11 @@ export default new Router({
         {
           path: ':id',
           component: Disc
-        }
+        },
+        // {
+        //   path: 'rank',
+        //   component: Rank
+        // }
       ]
     },
     {

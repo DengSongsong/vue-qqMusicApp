@@ -9,6 +9,7 @@ import SongList from '@/components/song-list/song-list'
 import RadioStation from '@/components/radio-station/radio-station'
 import Video from '@/components/video/video'
 import SingerDetail from '@/components/singer-detail/singer-detail'
+import Disc from '@/components/disc/disc'
 Vue.use(Router)
 
 export default new Router({
@@ -23,7 +24,13 @@ export default new Router({
     },
     {
       path: '/musicHall',
-      component: MusicHall
+      component: MusicHall,
+      children: [
+        {
+          path: ':id',
+          component: Disc
+        }
+      ]
     },
     {
       path: '/find',

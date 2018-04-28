@@ -41,7 +41,7 @@
             <span class="icon iconfont icon-bofang"></span>
           </div>
           <ul>
-            <li v-for="item in songList" :key="item.index" class="item">
+            <li @click="selectIetm(item)" v-for="item in songList" :key="item.index" class="item">
               <div class="list-media">
                 <img v-lazy="item.picUrl" alt="">
                 <span class="listen-count">
@@ -61,7 +61,7 @@
         <loading></loading>
       </div>
     </scroll>
-    <!-- <router-view></router-view> -->
+    <router-view></router-view>
   </div>
 </template>
 <script>
@@ -72,6 +72,7 @@ import RadioList from '@/components/radio-list/radio-list'
 import Scroll from '@/base/scroll/scroll'
 import Loading from '@/base/loading/loading'
 import { playlistMixin } from '@/common/js/mixin'
+import { mapMutations } from 'vuex'
 export default {
   mixins: [playlistMixin],
   data() {
@@ -97,6 +98,12 @@ export default {
       const bottom = playList.length > 0 ? '60px' : ''
       this.$refs.musicHall.style.bottom = bottom
       this.$refs.scroll.refresh()
+    },
+    selectIetm(item) {
+      this.$router.push({
+        path: `/musicHall/${item.id}`
+      })
+      this.setDisc(item)
     },
     // 获取轮播图数据 异步
     _getCarouselPic() {
@@ -124,7 +131,7 @@ export default {
         if(res.code === ERR_OK) {
           // console.log(res)
           this.songList = res.data.songList
-          // console.log(this.songList);
+          console.log(this.songList);
         }
       })
     },
@@ -134,7 +141,10 @@ export default {
         this.checkloaded = true;
         this.$refs.scroll.refresh()
       }
-    }
+    },
+    ...mapMutations({
+      setDisc: 'SET_DISC'
+    })
   },
   components: {
     Slider,

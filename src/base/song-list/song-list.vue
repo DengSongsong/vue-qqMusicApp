@@ -6,6 +6,9 @@
     </div>
     <ul>
       <li class="item" @click="selectItem(song, index)" v-for="(song, index) in songs" :key="index">
+        <div class="rank-item" v-show="rank">
+          <span class="text">{{index + 1}}</span>
+        </div>
         <div class="content">
           <h2 class="name">{{song.name}}</h2>
           <p class="desc">{{getDesc(song)}}</p>
@@ -22,6 +25,10 @@ export default {
     songs: {
       type: Array,
       default: []
+    },
+    rank: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
@@ -64,6 +71,14 @@ export default {
       padding .32rem .4rem
       font-size $font-size-medium-x
       border-bottom .013333rem solid $color-text-m
+      .rank-item
+        flex 0 0 .333333rem /* 25/75 */
+        width .333333rem /* 25/75 */
+        margin-right .4rem /* 30/75 */
+        text-align center
+        .text
+          color $color-text
+          font-size $font-size-large
       .content
         flex 1
         overflow hidden
@@ -74,6 +89,8 @@ export default {
           font-size $font-size-small
           margin-top .16rem /* 12/75 */
       .icon-gengduo
+        flex 0 0 .333333rem /* 25/75 */
+        width .333333rem /* 25/75 */
         font-size $font-size-large-x
 
 </style>

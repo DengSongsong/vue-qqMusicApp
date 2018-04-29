@@ -10,6 +10,7 @@ import RadioStation from '@/components/radio-station/radio-station'
 import Video from '@/components/video/video'
 import SingerDetail from '@/components/singer-detail/singer-detail'
 import Disc from '@/components/disc/disc'
+import TopList from '@/components/top-list/top-list'
 Vue.use(Router)
 
 export default new Router({
@@ -52,7 +53,13 @@ export default new Router({
     },
     {
       path: '/rank',
-      component: Rank
+      component: Rank,
+      children: [
+        {
+          path: ':id',
+          component: TopList
+        }
+      ]
     },
     {
       path: '/video',

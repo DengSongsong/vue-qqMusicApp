@@ -1,5 +1,5 @@
 <template>
-  <div class="search-box">
+  <div class="search-box" @click="search">
     <!-- <div class="search-box-inner"> -->
       <i class="icon iconfont icon-iconfontzhizuobiaozhun22"></i>
       <input type="text" class="box" :placeholder="placeholder">
@@ -13,6 +13,12 @@ export default {
     placeholder: {
       type: String,
       default: '搜索'
+    }
+  },
+  methods: {
+    search() {
+      // this.$router.push('/search')
+      this.$emit('search')
     }
   }
 }

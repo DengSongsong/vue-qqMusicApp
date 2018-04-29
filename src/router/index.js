@@ -11,6 +11,7 @@ import Video from '@/components/video/video'
 import SingerDetail from '@/components/singer-detail/singer-detail'
 import Disc from '@/components/disc/disc'
 import TopList from '@/components/top-list/top-list'
+import Search from '@/components/search/search'
 Vue.use(Router)
 
 export default new Router({
@@ -31,10 +32,6 @@ export default new Router({
           path: ':id',
           component: Disc
         },
-        // {
-        //   path: 'rank',
-        //   component: Rank
-        // }
       ]
     },
     {
@@ -72,6 +69,10 @@ export default new Router({
     {
       path: '/radioStation',
       component: RadioStation
+    },
+    {
+      path: '/search',
+      component: Search
     }
   ]
 })

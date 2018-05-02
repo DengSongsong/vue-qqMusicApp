@@ -1,20 +1,61 @@
 <template>
   <div class="search">
     <div class="search-wrapper">
-      <div class="box-wrapper">
-        <input type="text" class="box" placeholder="搜索音乐、MV、歌单、用户">
-        <i class="icon iconfont icon-shanchu"></i>
+      <search-box2 ref="searchBox" @query="onQueryChange"></search-box2>
+    </div>
+    <div class="shortcut-wrapper" v-show="!query">
+      <div class="shortcut">
+        <div>
+          <div class="hot-key">
+            <h1 class="title">热门搜索</h1>
+            <ul>
+              <li @click="addQuery(item.k)" class="item" v-for="item in hotKey" :key="item.index">
+                <span>{{item.k}}</span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-      <span class="cancel" @click="cancel">取消</span>
+    </div>
+    <div class="search-result" v-show="query">
+      <suggest :query="query"></suggest>
     </div>
   </div>
 </template>
 <script>
+import SearchBox2 from '@/base/search-box2/search-box2'
+import Suggest from '@/components/suggest/suggest'
+import { getHotKey } from '@/api/search'
+import { ERR_OK } from '@/api/config'
 export default {
-  methods: {
-    cancel() {
-      this.$router.push('/musicHall');
+  data() {
+    return {
+      hotKey: [],
+      query: ''
     }
+  },
+  methods: {
+    _getHotKey() {
+      getHotKey().then((res) => {
+        if (res.code === ERR_OK) {
+          this.hotKey = res.data.hotkey.slice(0, 10)
+          // console.log(this.hotKey)
+        }
+      })
+    },
+    addQuery(query) {
+      this.$refs.searchBox.setQuery(query)
+    },
+    onQueryChange(query) {
+      this.query = query
+    }
+  },
+  created() {
+    this._getHotKey()
+  },
+  components: {
+    SearchBox2,
+    Suggest
   }
 }
 </script>
@@ -26,40 +67,31 @@ export default {
     top 0
     bottom 0
     background: $color-background
-    .search-wrapper
+    .shortcut-wrapper
       width 100%
-      display flex
-      align-items center
-      box-sizing border-box
-      height 1.066667rem /* 80/75 */
-      padding 0 .32rem /* 24/75 */
-      margin-top .266667rem /* 20/75 */
-      .box-wrapper
-        flex 1
-        display flex
-        align-items center
+      // margin-top .266667rem /* 20/75 */
+      top: 2.4rem /* 180/75 */
+      bottom 0
+      background-color #233846
+      .shortcut
         height 100%
-        background #233846
-        .box
-          flex 1
-          height 100% 
-          padding-left .133333rem /* 10/75 */
-          font-size 16px
-          color #fff
-          outline none
-          background #233846
-          &::placeholder
-            font-size 16px
-            color $color-text-m
-        .icon-shanchu
-          width 1.066667rem /* 80/75 */
-          flex 0 0 1.066667rem /* 80/75 */
-          text-align center
-          font-size 24px
-      .cancel
-        width 1.6rem /* 120/75 */
-        flex 0 0 1.6rem /* 120/75 */
-        text-align center
-        color $color-text-m
-        font-size 16px
+        overflow hidden
+        .hot-key
+          margin .533333rem /* 40/75 */
+          .title
+            margin-bottom .266667rem /* 20/75 */
+            font-size $font-size-medium
+            color: $color-text-l
+          .item
+            display inline-block
+            padding .133333rem /* 10/75 */.266667rem /* 20/75 */
+            margin 0 .533333rem /* 40/75 */.266667rem /* 20/75 */0
+            border-radius .533333rem /* 40/75 */
+            color: $color-text-m
+            border 1px solid $color-text-m
+    .search-result
+      position: fixed
+      width: 100%
+      top: 2.4rem /* 180/75 */
+      bottom: 0
 </style>

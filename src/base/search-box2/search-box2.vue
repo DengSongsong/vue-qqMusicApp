@@ -1,13 +1,14 @@
 <template>
   <div class="search-box2">
     <div class="box-wrapper">
-      <input type="text" v-model="query" class="box" placeholder="搜索音乐、MV、歌单、用户">
+      <input ref="query" type="text" v-model="query" class="box" placeholder="搜索音乐、MV、歌单、用户">
       <i class="icon iconfont icon-shanchu" v-show="query" @click="clear"></i>
     </div>
     <span class="cancel" @click="cancel">取消</span>
   </div>
 </template>
 <script>
+import { debounce } from '@/common/js/utils'
 export default {
   data() {
     return {
@@ -23,12 +24,15 @@ export default {
     },
     setQuery(query) {
       this.query = query
+    },
+    blur() {
+      this.$refs.quert.blur()
     }
   },
   created() {
-    this.$watch('query', (newQuery) => {
+    this.$watch('query', debounce((newQuery) => {
       this.$emit('query', newQuery)
-    })
+    }, 200))
   }
 }
 </script>

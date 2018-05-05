@@ -71,7 +71,7 @@
           </div>
           <div class="operators2">
             <div class="icon-favorite icon-type">
-              <i class="icon iconfont icon-shoucang"></i>
+              <i @click="toggleFavorite(currentSong)" class="icon iconfont icon-shoucang" :class="favoriteIcon"></i>
             </div>
             <div class="icon-download icon-type">
               <i class="icon iconfont icon-xiazai"></i>
@@ -623,6 +623,8 @@ export default {
             height 1.493333rem /* 112/75 */
             line-height 1.493333rem /* 112/75 */
             text-align center
+            .current
+              color $color-icon
             .icon
               font-size 30px
       &.normal-enter-active, &.normal-leave-active

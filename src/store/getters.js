@@ -14,13 +14,15 @@ export const currentSong = (state) => {
 export const disc = state => state.disc
 export const topList = state => state.topList
 export const searchHistory = state => state.searchHistory
-export const playHistory = (state) => {
-  return state.playHistory.map((song) => {
-    return new Song(song)
-  })
-}
-export const favoriteList = (state) => {
-  return state.favoriteList.map((song) => {
-    return new Song(song)
-  })
-}
+// export const playHistory = (state) => {
+//   return state.playHistory.map((song) => {
+//     return new Song(song)
+//   })
+// }
+export const playHistory = state => state.playHistory
+// export const favoriteList = (state) => {
+//   return state.favoriteList.map((song) => {
+//     return new Song(song)
+//   })
+// }
+export const favoriteList = state => state.favoriteList

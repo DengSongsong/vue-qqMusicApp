@@ -16,8 +16,8 @@
             <li ref="listItem" class="item" v-for="(item, index) in sequenceList" :key="index" @click="selectItem(item,index)">
               <i class="current icon iconfont" :class="getCurrentIcon(item)"></i>
               <span class="text" v-html="item.name"></span>
-              <span class="like">
-                <i class="icon iconfont icon-shoucang"></i>
+              <span class="like" @click.stop="toggleFavorite(item)">
+                <i class="icon iconfont icon-shoucang" :class="getFavoriteIcon(item)"></i>
               </span>
               <span class="delete" @click.stop="deleteOne(item)">
                 <i class="icon iconfont icon-shanchu"></i>
@@ -211,10 +211,13 @@ export default {
           .like
             extend-click()
             margin-right .4rem /* 30/75 */
-            font-size $font-size-small
-            color $color-theme
+            // font-size $font-size-small
+            // color $color-theme
             .icon-shoucang
               color $color-text-d
+              &.current
+                color: $color-theme
+                font-size 16px
           .delete
             extend-click()
             font-size $font-size-small

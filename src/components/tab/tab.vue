@@ -14,14 +14,20 @@
         <span class="tab-link">发现</span>
       </router-link>
     </div>
-    <div class="tab-right">
+    <div class="tab-right" @click="userPage">
       <span class="icon iconfont icon-jia"></span>
     </div>
   </div>
 </template>
 <script>
 export default {
-  
+  methods: {
+    userPage() {
+      this.$router.push({
+        path: '/user'
+      })
+    }
+  }
 }
 </script>
 <style lang="stylus">

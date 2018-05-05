@@ -36,9 +36,13 @@ export const playerMixin = {
       // 播放模式
       'mode',
       'sequenceList',
+      'favoriteList'
     ]),
     iconMode() {
       return this.mode === playMode.sequence ? 'icon-xunhuanbofang' : this.mode === playMode.loop ? 'icon-danquxunhuan' : 'icon-suijibofang01'
+    },
+    favoriteIcon() {
+      return this.getFavoriteIcon(this.currentSong)
     }
   },
   methods: {
@@ -65,12 +69,35 @@ export const playerMixin = {
       this.setCurrentIndex(stayIndex)
 
     },
+    toggleFavorite(song) {
+      if (this.isFavorite(song)) {
+        this.deleteFavoriteList(song)
+      } else {
+        this.saveFavoriteList(song)
+      }
+    },
+    getFavoriteIcon(song) {
+      if (this.isFavorite(song)) {
+        return 'current'
+      }
+      return ''
+    },
+    isFavorite(song) {
+      const index = this.favoriteList.findIndex((item) => {
+        return item.id === song.id
+      })
+      return index > -1
+    },
     ...mapMutations({
       setPlayingState: 'SET_PLSYING_STATE',
       setCurrentIndex: 'SET_CURRENT_INDEX',
       setPlayMode: 'SET_PLAY_MODE',
       setPlayList: 'SET_PLAY_lIST'
-    })
+    }),
+    ...mapActions([
+      'saveFavoriteList',
+      'deleteFavoriteList'
+    ])
   }
 }
 

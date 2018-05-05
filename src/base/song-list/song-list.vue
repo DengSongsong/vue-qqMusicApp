@@ -1,6 +1,6 @@
 <template>
   <div class="song-list">
-    <div class="play-wrapper"  @click="random">
+    <div class="play-wrapper"  @click="random" v-show="playFlag">
       <i class="icon iconfont icon-bofang1"></i>
       <span class="play">全部播放</span>
     </div>
@@ -29,6 +29,10 @@ export default {
     rank: {
       type: Boolean,
       default: false
+    },
+    playFlag: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {

@@ -1,7 +1,7 @@
 <template>
   <div class="search-box2">
     <div class="box-wrapper">
-      <input ref="query" type="text" v-model="query" class="box" placeholder="搜索音乐、MV、歌单、用户">
+      <input ref="query" type="text" v-model="query" class="box" :placeholder="placeholder">
       <i class="icon iconfont icon-shanchu" v-show="query" @click="clear"></i>
     </div>
     <span class="cancel" @click="cancel">取消</span>
@@ -10,6 +10,12 @@
 <script>
 import { debounce } from '@/common/js/utils'
 export default {
+  props: {
+    placeholder: {
+      type: String,
+      default: '搜索歌曲、歌手'
+    }
+  },
   data() {
     return {
       query: ''

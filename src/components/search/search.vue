@@ -1,10 +1,10 @@
 <template>
   <div class="search">
     <div class="search-wrapper">
-      <search-box2 ref="searchBox" @query="onQueryChange"></search-box2>
+      <search-box2 ref="searchBox" @query="onQueryChange" placeholder="搜索音乐、MV、歌单、用户"></search-box2>
     </div>
     <div class="shortcut-wrapper" v-show="!query" ref="shortcutWrapper">
-      <scroll :data="shortcut" ref="shortcut" class="shortcut">
+      <scroll :refreshDelay="refreshDelay" :data="shortcut" ref="shortcut" class="shortcut">
         <div>
           <div class="hot-key">
             <h1 class="title">热门搜索</h1>
@@ -48,7 +48,8 @@ export default {
   data() {
     return {
       hotKey: [],
-      query: ''
+      query: '',
+      refreshDelay: 120
     }
   },
   computed: {

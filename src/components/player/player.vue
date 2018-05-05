@@ -100,23 +100,27 @@
             <i @click.stop="togglePlaying" class="icon iconfont icon-mini" :class="miniIcon"></i>
           </progress-circle>
         </div>
-        <div class="control">
+        <div class="control" @click.stop="showPlaylist">
           <i class="icon iconfont icon-liebiao-copy"></i>
         </div>
       </div>
     </transition>
+    <playlist ref="playlist"></playlist>
     <audio :src="currentSong.url" ref="audio" @play="ready" @error="error" @timeupdate="timeUpdate" @ended="end"></audio>
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapGetters, mapMutations, mapActions } from 'vuex'
 import ProgressBar from '@/base/progress-bar/progress-bar'
 import ProgressCircle from '@/base/progress-circle/progress-circle'
 import { playMode } from '@/common/js/config'
-import { shuffle } from '@/common/js/utils'
+// import { shuffle } from '@/common/js/utils'
 import Lyric from 'lyric-parser'
 import Scroll from '@/base/scroll/scroll'
+import Playlist from '@/components/playlist/playlist'
+import { playerMixin } from '@/common/js/mixin'
 export default {
+  mixins: [playerMixin],
   data() {
     return {
       songReady: false,
@@ -134,16 +138,16 @@ export default {
       // 控制播放页面显示或隐藏
       'fullScreen',
       // 控制播放器的渲染 歌曲数
-      'playList',
+      // 'playList',
     //   当前歌曲
-      'currentSong',
+      // 'currentSong',
     //   当前歌曲播放状态
       'playing',
     //   当前歌曲索引
       'currentIndex',
       // 播放模式
-      'mode',
-      'sequenceList',
+      // 'mode',
+      // 'sequenceList',
     ]),
     // 播放页面 播放按钮切换
     playIcon() {
@@ -160,9 +164,9 @@ export default {
     timePercent() {
       return this.currentTime / this.currentSong.duration
     },
-    iconMode() {
-      return this.mode === playMode.sequence ? 'icon-xunhuanbofang' : this.mode === playMode.loop ? 'icon-danquxunhuan' : 'icon-suijibofang01'
-    }
+    // iconMode() {
+    //   return this.mode === playMode.sequence ? 'icon-xunhuanbofang' : this.mode === playMode.loop ? 'icon-danquxunhuan' : 'icon-suijibofang01'
+    // }
   },
   created() {
     this.touch = {}
@@ -255,6 +259,7 @@ export default {
     },
     ready() {
       this.songReady = true
+      this.savePlayHistory(this.currentSong)
     },
     error() {
       this.songReady = true
@@ -291,29 +296,29 @@ export default {
       }
     },
     // 点击按钮改变播放模式，提交mutations
-    changeMode() {
-      let nextMode = (this.mode + 1) % 3
-      this.setPlayMode(nextMode)
-      let list = []
-      if (this.mode === playMode.random) {// 随机播放打乱播放列表
-        list = shuffle(this.sequenceList)
-      } else { //顺序播放
-        list = this.sequenceList
-      }
-      // 改变歌曲顺序前先重设当前歌曲索引
-      this.stayCurrentIndex(list)
-      // 提交mutation改变歌曲顺序
-      this.setPlayList(list)
-    },
+    // changeMode() {
+    //   let nextMode = (this.mode + 1) % 3
+    //   this.setPlayMode(nextMode)
+    //   let list = []
+    //   if (this.mode === playMode.random) {// 随机播放打乱播放列表
+    //     list = shuffle(this.sequenceList)
+    //   } else { //顺序播放
+    //     list = this.sequenceList
+    //   }
+    //   // 改变歌曲顺序前先重设当前歌曲索引
+    //   this.stayCurrentIndex(list)
+    //   // 提交mutation改变歌曲顺序
+    //   this.setPlayList(list)
+    // },
     // 改变播放模式时当前播放歌曲索引发生变化，需要重设索引防止播放列表不可控制
-    stayCurrentIndex(list) {
-      // findIndex是es6的数组方法，返回数组中满足条件的第一个元素的索引
-      let stayIndex = list.findIndex(item => {
-        return item.id === this.currentSong.id
-      })
-      this.setCurrentIndex(stayIndex)
+    // stayCurrentIndex(list) {
+    //   // findIndex是es6的数组方法，返回数组中满足条件的第一个元素的索引
+    //   let stayIndex = list.findIndex(item => {
+    //     return item.id === this.currentSong.id
+    //   })
+    //   this.setCurrentIndex(stayIndex)
 
-    },
+    // },
     end() {
       if (this.mode === playMode.loop) {
         this.loop()
@@ -413,18 +418,25 @@ export default {
       this.$refs.middleL.style['transitionDuration'] = `${time}ms`
       this.touch.initiated = false
     },
+    showPlaylist() {
+      this.$refs.playlist.show()
+    },
     ...mapMutations({
       setFullScreen: 'SET_FULL_SCREEN',
-      setPlayingState: 'SET_PLSYING_STATE',
-      setCurrentIndex: 'SET_CURRENT_INDEX',
-      setPlayMode: 'SET_PLAY_MODE',
-      setPlayList: 'SET_PLAY_lIST'
-    })
+      // setPlayingState: 'SET_PLSYING_STATE',
+      // setCurrentIndex: 'SET_CURRENT_INDEX',
+      // setPlayMode: 'SET_PLAY_MODE',
+      // setPlayList: 'SET_PLAY_lIST'
+    }),
+    ...mapActions([
+      'savePlayHistory'
+    ])
   },
   components: {
     ProgressBar,
     ProgressCircle,
-    Scroll
+    Scroll,
+    Playlist
   }
 }
 </script>

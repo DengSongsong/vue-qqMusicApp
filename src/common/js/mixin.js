@@ -61,6 +61,7 @@ export const playerMixin = {
       // 提交mutation改变歌曲顺序
       this.setPlayList(list)
     },
+    // 改变播放模式时当前播放歌曲索引发生变化，需要重设索引防止播放列表不可控制
     stayCurrentIndex(list) {
       // findIndex是es6的数组方法，返回数组中满足条件的第一个元素的索引
       let stayIndex = list.findIndex(item => {
